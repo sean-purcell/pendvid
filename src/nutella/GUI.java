@@ -6,6 +6,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,6 +23,7 @@ public class GUI extends JFrame{
 		this.getContentPane().add(root);
 		this.pack();
 		this.setVisible(true);
+		root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
 		
 		this.setResizable(true);
 		this.addComponentListener(new ComponentAdapter() {
@@ -45,7 +47,7 @@ public class GUI extends JFrame{
 						(int) (img.getHeight() * ratio),
 						0)));
 		root.add(show);
-		this.repaint();
+		//this.repaint();
 	}
 	
 	public Point[] getRefLine(BufferedImage img) {
