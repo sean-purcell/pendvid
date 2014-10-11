@@ -1,9 +1,5 @@
 package nutella;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
 
 public class Pendvid {
 	public static void main(String[] args) {
@@ -13,18 +9,5 @@ public class Pendvid {
 		}
 
 		Readvid.readvid(args[0], args[1]);
-	}
-}
-
-class VidFrame extends JPanel {
-	private BufferedImage img;
-	public void setImg(BufferedImage img) {
-		this.img = img;
-	}
-	
-	@Override
-	public void paintComponent(Graphics g) {
-		if(img != null)
-			g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
 	}
 }

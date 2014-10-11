@@ -88,7 +88,7 @@ public class Readvid {
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-						System.out.println(outdir + File.pathSeparator + "f" + frameNo + ".jpg");
+						System.out.println(outdir + File.separator + "f" + frameNo + ".jpg");
 						frameNo++;
 					}
 				}
