@@ -1,4 +1,4 @@
-package nutella;
+package nutella.pendvid;
 
 import java.awt.Dimension;
 import java.awt.Point;

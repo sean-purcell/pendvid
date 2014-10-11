@@ -1,4 +1,4 @@
-package nutella;
+package nutella.pendvid;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
