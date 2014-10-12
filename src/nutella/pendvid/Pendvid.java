@@ -1,6 +1,5 @@
 package nutella.pendvid;
 
-
 public class Pendvid {
 	public static void main(String[] args) {
 		if(args.length < 2) {
