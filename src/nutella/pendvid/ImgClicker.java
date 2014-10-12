@@ -21,7 +21,7 @@ public class ImgClicker extends JPanel {
 
 	// 0 is normal;
 	// 1 is refline;
-	// 2 is bobclick
+	// 2 is bobclick;
 	private int mode;
 
 	private volatile Point click1, click2, mouse;
