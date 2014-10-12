@@ -27,7 +27,7 @@ public class ImgClicker extends JPanel {
 	private volatile Point click1, click2, mouse;
 
 	private volatile Thread waitThread;
-	
+
 	public ImgClicker() {
 		mode = 0;
 		this.addMouseListener(new MouseListener() {
@@ -54,6 +54,10 @@ public class ImgClicker extends JPanel {
 						}
 					}
 				} break;
+				case 2: {
+					click1 = new Point(x, y);
+					System.out.println("bobclick");
+				} break;
 				}
 				ImgClicker.this.repaint();
 			}
@@ -69,7 +73,7 @@ public class ImgClicker extends JPanel {
 
 			@Override
 			public void mouseExited(MouseEvent e) {}
-			
+	
 		});
 		this.addMouseMotionListener(new MouseMotionListener() {
 			@Override
@@ -84,20 +88,21 @@ public class ImgClicker extends JPanel {
 			}
 		});
 	}
-	
+
 	private int appRatio(int v) {
 		return (int) (v * ratio);
 	}
-	
+
 	public Point[] getRefLine(BufferedImage frame, double ratio) {
 		this.setImg(frame, ratio);
 		this.click1 = null;
 		this.click2 = null;
 		this.mode = 1;
+		Thread.interrupted();
 		waitThread = Thread.currentThread();
 		while(click2 == null) {
 			if(Thread.interrupted()) {
-				break;
+				continue;
 			}
 			try{
 				Thread.sleep(1000);
@@ -106,9 +111,31 @@ public class ImgClicker extends JPanel {
 			}
 		}
 		this.mode = 0;
+		waitThread = null;
 		return new Point[]{click1, click2};
 	}
-	
+
+	public Point getBobClick(BufferedImage frame, double ratio) {
+		this.setImg(frame, ratio);
+		this.click1 = null;
+		this.mode = 2;
+		Thread.interrupted();
+		waitThread = Thread.currentThread();
+		while(click1 == null) {
+			if(Thread.interrupted()) {
+				continue;
+			}
+			try{
+				Thread.sleep(1000);
+			} catch(InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+		}
+		this.mode = 0;
+		waitThread = null;
+		return click1;
+	}
+
 	public void setImg(BufferedImage newImg, double ratio) {
 		if(newImg == null)
 			return;
@@ -143,6 +170,7 @@ public class ImgClicker extends JPanel {
 						appRatio(mouse.x), appRatio(mouse.y));
 			}
 		} break;
+		case 2: break;
 		}
 	}
 }

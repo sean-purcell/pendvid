@@ -26,7 +26,7 @@ public class GUI extends JFrame{
 		this.pack();
 		this.setVisible(true);
 		root.setLayout(new BoxLayout(root, BoxLayout.Y_AXIS));
-		
+
 		this.setResizable(true);
 		this.addComponentListener(new ComponentAdapter() {
 			@Override
@@ -36,22 +36,27 @@ public class GUI extends JFrame{
 			}
 		});
 	}
-	
+
 	private double imgRatio(BufferedImage img) {
 		Dimension size = root.getSize();
 		double ratiox = size.getWidth() / img.getWidth();
 		double ratioy = size.getHeight() / img.getHeight();
 		return Math.min(ratiox, ratioy);
 	}
-	
+
 	public void redraw() {
 		if(img == null)
 			return;
 		imgclick.setImg(img, imgRatio(img));
 	}
-	
+
 	public Point[] getRefLine(BufferedImage img) {
 		this.img = img;
 		return imgclick.getRefLine(img, imgRatio(img));
+	}
+
+	public Point getBobClick(BufferedImage img) {
+		this.img = img;
+		return imgclick.getBobClick(img, imgRatio(img));
 	}
 }
