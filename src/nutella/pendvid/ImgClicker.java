@@ -1,12 +1,148 @@
 package nutella.pendvid;
 
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JPanel;
+
+import static nutella.pendvid.BobClick.prettyPoint;
+
+@SuppressWarnings("serial")
 public class ImgClicker extends JPanel {
-	private BufferedImage img;
+	private Image img;
+	private double ratio;
+
+	// 0 is normal;
+	// 1 is refline;
+	// 2 is bobclick
+	private int mode;
+
+	private volatile Point click1, click2, mouse;
+
+	private volatile Thread waitThread;
 	
 	public ImgClicker() {
-		
+		mode = 0;
+		this.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("click at:\t" + prettyPoint(e.getX(), e.getY()));
+				int x = (int) (e.getX() / ratio);
+				int y = (int) (e.getY() / ratio);
+				System.out.println("rescaled to:\t" + prettyPoint(x, y));
+				switch(mode) {
+				case 0: break;
+				case 1: {
+					if(click1 == null) {
+						click1 = new Point(x, y);
+						System.out.println("refline click1");
+					} else {
+						Point tmp = new Point(x, y);
+						if(!tmp.equals(click1)) {
+							click2 = tmp;
+							System.out.println("refline click2");
+							if(waitThread != null) {
+								waitThread.interrupt();
+							}
+						}
+					}
+				} break;
+				}
+				ImgClicker.this.repaint();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {}
+
+			@Override
+			public void mouseExited(MouseEvent e) {}
+			
+		});
+		this.addMouseMotionListener(new MouseMotionListener() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				mouse = new Point((int) (e.getX() / ratio), (int) (e.getY() / ratio));
+				ImgClicker.this.repaint();
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				this.mouseMoved(e);
+			}
+		});
+	}
+	
+	private int appRatio(int v) {
+		return (int) (v * ratio);
+	}
+	
+	public Point[] getRefLine(BufferedImage frame, double ratio) {
+		this.setImg(frame, ratio);
+		this.click1 = null;
+		this.click2 = null;
+		this.mode = 1;
+		waitThread = Thread.currentThread();
+		while(click2 == null) {
+			if(Thread.interrupted()) {
+				break;
+			}
+			try{
+				Thread.sleep(1000);
+			} catch(InterruptedException e) {
+				Thread.currentThread().interrupt();
+			}
+		}
+		this.mode = 0;
+		return new Point[]{click1, click2};
+	}
+	
+	public void setImg(BufferedImage newImg, double ratio) {
+		if(newImg == null)
+			return;
+		System.out.println("updated ratio: " + ratio);
+		this.ratio = ratio;
+		this.img = newImg.getScaledInstance(
+				(int) (newImg.getWidth() * ratio),
+				(int) (newImg.getHeight() * ratio),
+				0);
+		this.setSize(new Dimension(
+				img.getWidth(null),
+				img.getHeight(null)));
+		this.repaint();
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		if(img != null) {
+			g.drawImage(img, 0, 0, img.getWidth(null), img.getHeight(null), null);
+		}
+		switch(mode) {
+		case 0: break;
+		case 1: {
+			if(click1 == null) break;
+			g.setColor(Color.RED);
+			g.drawLine(appRatio(click1.x), appRatio(click1.y) - 5,
+					appRatio(click1.x), appRatio(click1.y) + 5);
+			g.drawLine(appRatio(click1.x) - 5, appRatio(click1.y),
+					appRatio(click1.x) + 5, appRatio(click1.y));
+			if(click2 == null && mouse != null) {
+				g.drawLine(appRatio(click1.x), appRatio(click1.y),
+						appRatio(mouse.x), appRatio(mouse.y));
+			}
+		} break;
+		}
 	}
 }

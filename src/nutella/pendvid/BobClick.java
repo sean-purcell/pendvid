@@ -41,5 +41,17 @@ public class BobClick {
 		
 		GUI gui = new GUI();
 		Point[] adjust = gui.getRefLine(getImg(dir, 0));
+		System.out.println("Reference vertical line: "
+				+ prettyPoint(adjust[0]) + " -- "
+				+ prettyPoint(adjust[1]));
+	}
+	
+	/* utility: */
+	public static String prettyPoint(Point p) {
+		return prettyPoint(p.x, p.y);
+	}
+	
+	public static String prettyPoint(int x, int y) {
+		return "(" + x + "," + y + ")";
 	}
 }
