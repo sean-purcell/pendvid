@@ -18,7 +18,7 @@ public class PointCalc {
 	}
 
 	private PointD calcRefVec(Point[] refLine) {
-		PointD vec = new PointD(refLine[1]).sub(new PointD(refLine[2]));
+		PointD vec = new PointD(refLine[1]).sub(new PointD(refLine[0]));
 		if(intersection.d2(new PointD(refLine[1])) >
 			intersection.d2(new PointD(refLine[0]))) {
 			return vec.unit();
@@ -53,12 +53,16 @@ public class PointCalc {
 	
 	public ClickData compClick(Point click) {
 		PointD c = new PointD(click);
-		double mag = c.mag();
-		double dot = refVec.dot(c);
+		PointD vec = c.sub(intersection);
+		double mag = vec.mag();
+		double dot = refVec.dot(vec);
 		double theta = Math.acos(dot / mag);
 		double rtheta = theta - Math.PI/2;
 		double x = mag * Math.cos(rtheta);
 		double y = mag * Math.sin(rtheta);
+		System.out.println("vec\t:" + BobClick.prettyPoint(vec));
+		System.out.println("mag\t:" + mag);
+		System.out.println("dot\t:" + dot);
 		return new ClickData(theta, new PointD(x, y));
 	}
 }

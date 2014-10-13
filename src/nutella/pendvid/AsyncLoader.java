@@ -27,7 +27,7 @@ public class AsyncLoader extends Thread {
 				Thread.sleep(1000);
 			} catch(InterruptedException e) {
 				Thread.currentThread().interrupt();
-				System.out.println("loader interuppted");
+				System.out.println("loader interrupted");
 			}
 			while(imgq.size() < 10 && i < numFrames) {
 				imgq.add(BobClick.getImg(dir, i));

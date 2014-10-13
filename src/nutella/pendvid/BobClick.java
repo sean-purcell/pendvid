@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -31,6 +33,14 @@ public class BobClick {
 		return jfc.getSelectedFile().getAbsolutePath();
 	}
 
+	public static PrintStream getPrintStream(String fname) {
+		try {
+			return new PrintStream(new FileOutputStream(fname));
+		} catch(IOException e) {
+			throw new RuntimeException("could not open output stream");
+		}
+	}
+	
 	public static BufferedImage getImg(String dir, int num) {
 		BufferedImage img = null;
 		try {
@@ -58,6 +68,9 @@ public class BobClick {
 		} else {
 			dir = args[0];
 		}
+		
+		String outfile = "out.csv";
+		PrintStream out = getPrintStream(outfile);
 
 		System.out.println(dir);
 
@@ -80,7 +93,9 @@ public class BobClick {
 				+ prettyPoint(edgevecs[1][0]) + " -- "
 				+prettyPoint(edgevecs[1][1]));
 		PointCalc pc = new PointCalc(adjust, edgevecs);
-		List<Point> points = getBobClicks(dir, numFrames, gui);
+		List<Point> points = getBobClicks(dir, numFrames, gui, pc, out);
+		
+		out.close();
 	}
 
 	public static AsyncLoader loadImgsAsync(
@@ -116,7 +131,7 @@ public class BobClick {
 		return edgevecs;
 	}
 	
-	public static List<Point> getBobClicks(String dir, int numFrames, GUI gui) {
+	public static List<Point> getBobClicks(String dir, int numFrames, GUI gui, PointCalc pc, PrintStream out) {
 		List<Point> bobcentres = new ArrayList<Point>(numFrames);
 		final ConcurrentLinkedQueue<BufferedImage> imgq = new ConcurrentLinkedQueue<BufferedImage>();
 		final AsyncLoader asyncLoader = loadImgsAsync(imgq, dir, numFrames);
@@ -132,6 +147,9 @@ public class BobClick {
 			asyncLoader.interrupt();
 			System.out.println("bob at:\t" + prettyPoint(p));
 			bobcentres.add(p);
+			ClickData click = pc.compClick(p);
+			System.out.println("data: " + click);
+			out.println(i + "," + click);
 		}
 		asyncLoader.done();
 		return bobcentres;
