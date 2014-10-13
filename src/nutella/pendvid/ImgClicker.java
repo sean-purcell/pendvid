@@ -32,12 +32,12 @@ public class ImgClicker extends JPanel {
 		mode = 0;
 		this.addMouseListener(new MouseListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				mouseClick(e);
-			}
+			public void mouseClicked(MouseEvent e) {}
 
 			@Override
-			public void mousePressed(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {
+				mouseClick(e);
+			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {}
