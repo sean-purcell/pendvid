@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -72,10 +73,51 @@ public class BobClick {
 		List<Point> points = getBobClicks(dir, numFrames, gui);
 	}
 
+	public static Thread loadImgsAsync(
+			final ConcurrentLinkedQueue<BufferedImage> imgq,
+			final String dir,
+			final int numFrames) {
+		Runnable loader = new Runnable() {
+			@Override
+			public void run() {
+				int i = 0;
+				System.out.println("asynchronous loader started");
+				while(i < numFrames) {
+					Thread.interrupted();
+					try{
+						Thread.sleep(1000);
+					} catch(InterruptedException e) {
+						Thread.currentThread().interrupt();
+						System.out.println("loader interuppted");
+					}
+					while(imgq.size() < 10 && i < numFrames) {
+						imgq.add(getImg(dir, i));
+						System.out.println("loaded frame " + i);
+						i++;
+					}
+				}
+			}
+		};
+		
+		Thread runner = new Thread(loader);
+		runner.start();
+		return runner;
+	}
+	
 	public static List<Point> getBobClicks(String dir, int numFrames, GUI gui) {
 		List<Point> bobcentres = new ArrayList<Point>(numFrames);
+		final ConcurrentLinkedQueue<BufferedImage> imgq = new ConcurrentLinkedQueue<BufferedImage>();
+		final Thread asyncLoader = loadImgsAsync(imgq, dir, numFrames);
+		asyncLoader.interrupt();
 		for(int i = 0; i < numFrames; i++) {
-			Point p = gui.getBobClick(getImg(dir, i));
+			while(imgq.size() == 0) {
+				try{
+					Thread.sleep(50);
+				} catch(InterruptedException e) {
+				}
+			}
+			Point p = gui.getBobClick(imgq.remove(), genLabel("Click on bob centre"));
+			asyncLoader.interrupt();
 			System.out.println("bob at:\t" + prettyPoint(p));
 			bobcentres.add(p);
 		}

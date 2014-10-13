@@ -57,6 +57,9 @@ public class ImgClicker extends JPanel {
 				case 2: {
 					click1 = new Point(x, y);
 					System.out.println("bobclick");
+					if(waitThread != null) {
+						waitThread.interrupt();
+					}
 				} break;
 				}
 				ImgClicker.this.repaint();
