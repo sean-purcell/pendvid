@@ -57,7 +57,7 @@ public class PointCalc {
 		double mag = vec.mag();
 		double dot = refVec.dot(vec);
 		double theta = Math.acos(dot / mag);
-		if(intersection.x * vec.y - intersection.y * vec.x < 0) {
+		if(refVec.x * vec.y - refVec.y * vec.x < 0) {
 			theta = -theta;
 		}
 		double rtheta = theta - Math.PI/2;
