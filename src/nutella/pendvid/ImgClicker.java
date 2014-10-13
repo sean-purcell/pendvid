@@ -40,25 +40,31 @@ public class ImgClicker extends JPanel {
 				switch(mode) {
 				case 0: break;
 				case 1: {
-					if(click1 == null) {
-						click1 = new Point(x, y);
-						System.out.println("refline click1");
-					} else {
-						Point tmp = new Point(x, y);
-						if(!tmp.equals(click1)) {
-							click2 = tmp;
-							System.out.println("refline click2");
-							if(waitThread != null) {
-								waitThread.interrupt();
+					if(e.getButton() == MouseEvent.BUTTON1) {
+						if(click1 == null) {
+							click1 = new Point(x, y);
+							System.out.println("refline click1");
+						} else {
+							Point tmp = new Point(x, y);
+							if(!tmp.equals(click1)) {
+								click2 = tmp;
+								System.out.println("refline click2");
+								if(waitThread != null) {
+									waitThread.interrupt();
+								}
 							}
 						}
+					} else {
+						click1 = null;
 					}
 				} break;
 				case 2: {
-					click1 = new Point(x, y);
-					System.out.println("bobclick");
-					if(waitThread != null) {
-						waitThread.interrupt();
+					if(e.getButton() == MouseEvent.BUTTON1) {
+						click1 = new Point(x, y);
+						System.out.println("bobclick");
+						if(waitThread != null) {
+							waitThread.interrupt();
+						}
 					}
 				} break;
 				}
@@ -96,7 +102,7 @@ public class ImgClicker extends JPanel {
 		return (int) (v * ratio);
 	}
 
-	public Point[] getRefLine(BufferedImage frame, double ratio) {
+	public Point[] getLine(BufferedImage frame, double ratio) {
 		this.setImg(frame, ratio);
 		this.click1 = null;
 		this.click2 = null;

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 
@@ -70,6 +71,7 @@ public class BobClick {
 	
 		int numFrames = maxFrameNum(dir);
 		System.out.println("number of frames: " + numFrames);
+		Point[][] edgevecs = getEdgeVecs(dir, numFrames, gui);
 		List<Point> points = getBobClicks(dir, numFrames, gui);
 	}
 
@@ -80,19 +82,30 @@ public class BobClick {
 		AsyncLoader loader = new AsyncLoader(numFrames, imgq, dir);
 		loader.start();
 		return loader;
-					}
-					while(imgq.size() < 10 && i < numFrames) {
-						imgq.add(getImg(dir, i));
-						System.out.println("loaded frame " + i);
-						i++;
-					}
-				}
+	}
+	
+	public static Point[][] getEdgeVecs(final String dir, final int numFrames, final GUI gui) {
+		List<Component> instr = genLabel(
+			"Define the line for the pendulum swing at the two edges.  Press next to advance to the next image.");
+		JButton button = new JButton("next");
+		final ConcurrentLinkedQueue<BufferedImage> imgq = new ConcurrentLinkedQueue<BufferedImage>();
+		final AsyncLoader asyncLoader = loadImgsAsync(imgq, dir, numFrames);
+		button.addActionListener(new ActionListener() {
+			private int i = 0;
+
+			@Override
+			public void actionPerformed(ActionEvent e1) {
+				if(i + 1 >= numFrames)
+					return;
+				i++;
+				gui.setImg(imgq.remove());
+				asyncLoader.interrupt();
 			}
-		};
-		
-		Thread runner = new Thread(loader);
-		runner.start();
-		return runner;
+		});
+		instr.add(button);
+		Point[][] edgevecs = gui.getEdgeVecs(getImg(dir, 0), instr);
+		asyncLoader.done();
+		return edgevecs;
 	}
 	
 	public static List<Point> getBobClicks(String dir, int numFrames, GUI gui) {

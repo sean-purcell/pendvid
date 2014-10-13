@@ -50,6 +50,8 @@ public class GUI extends JFrame{
 		if(img == null)
 			return;
 		imgclick.setImg(img, imgRatio(img));
+		root.validate();
+		root.repaint();
 	}
 
 	public Point[] getRefLine(BufferedImage img, List<Component> instr) {
@@ -57,13 +59,33 @@ public class GUI extends JFrame{
 		for(int i = 0; i < instr.size(); i++) {
 			root.add(instr.get(i));
 		}
+		root.validate();
 		root.repaint();
-		Point[] line = imgclick.getRefLine(img, imgRatio(img));
+		Point[] line = imgclick.getLine(img, imgRatio(img));
 		for(int i = 0; i < instr.size(); i++) {
 			root.remove(instr.get(i));
 		}
+		root.validate();
 		root.repaint();
 		return line;
+	}
+
+	public Point[][] getEdgeVecs(BufferedImage img, List<Component> instr) {
+		System.out.println("getting vectors for edges");
+		this.img = img;
+		for(int i = 0; i < instr.size(); i++) {
+			root.add(instr.get(i));
+		}
+		root.validate();
+		root.repaint();
+		Point[] vec1 = imgclick.getLine(img, imgRatio(img));
+		Point[] vec2 = imgclick.getLine(img, imgRatio(img));
+		for(int i = 0; i < instr.size(); i++) {
+			root.remove(instr.get(i));
+		}
+		root.validate();
+		root.repaint();
+		return new Point[][]{vec1, vec2};
 	}
 	
 	public Point getBobClick(BufferedImage img, List<Component> instr) {
@@ -71,15 +93,17 @@ public class GUI extends JFrame{
 		for(int i = 0; i < instr.size(); i++) {
 			root.add(instr.get(i));
 		}
+		root.validate();
 		root.repaint();
 		Point click = imgclick.getBobClick(img, imgRatio(img)); 
 		for(int i = 0; i < instr.size(); i++) {
 			root.remove(instr.get(i));
 		}
+		root.validate();
 		root.repaint();
 		return click;
 	}
-
+	
 	public void setImg(BufferedImage img) {
 		this.img = img;
 		imgclick.setImg(img, imgRatio(img));
