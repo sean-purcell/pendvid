@@ -73,22 +73,13 @@ public class BobClick {
 		List<Point> points = getBobClicks(dir, numFrames, gui);
 	}
 
-	public static Thread loadImgsAsync(
+	public static AsyncLoader loadImgsAsync(
 			final ConcurrentLinkedQueue<BufferedImage> imgq,
 			final String dir,
 			final int numFrames) {
-		Runnable loader = new Runnable() {
-			@Override
-			public void run() {
-				int i = 0;
-				System.out.println("asynchronous loader started");
-				while(i < numFrames) {
-					Thread.interrupted();
-					try{
-						Thread.sleep(1000);
-					} catch(InterruptedException e) {
-						Thread.currentThread().interrupt();
-						System.out.println("loader interuppted");
+		AsyncLoader loader = new AsyncLoader(numFrames, imgq, dir);
+		loader.start();
+		return loader;
 					}
 					while(imgq.size() < 10 && i < numFrames) {
 						imgq.add(getImg(dir, i));
@@ -107,7 +98,7 @@ public class BobClick {
 	public static List<Point> getBobClicks(String dir, int numFrames, GUI gui) {
 		List<Point> bobcentres = new ArrayList<Point>(numFrames);
 		final ConcurrentLinkedQueue<BufferedImage> imgq = new ConcurrentLinkedQueue<BufferedImage>();
-		final Thread asyncLoader = loadImgsAsync(imgq, dir, numFrames);
+		final AsyncLoader asyncLoader = loadImgsAsync(imgq, dir, numFrames);
 		asyncLoader.interrupt();
 		for(int i = 0; i < numFrames; i++) {
 			while(imgq.size() == 0) {
@@ -121,6 +112,7 @@ public class BobClick {
 			System.out.println("bob at:\t" + prettyPoint(p));
 			bobcentres.add(p);
 		}
+		asyncLoader.done();
 		return bobcentres;
 	}
 
