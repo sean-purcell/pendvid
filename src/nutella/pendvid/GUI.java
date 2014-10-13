@@ -10,14 +10,13 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class GUI extends JFrame{
 	private final JPanel root;
 	private BufferedImage img;
 	private ImgClicker imgclick;
-	private JLabel show;
 
 	public GUI() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

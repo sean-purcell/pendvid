@@ -61,6 +61,8 @@ public class BobClick {
 
 		System.out.println(dir);
 
+		int numFrames = maxFrameNum(dir);
+
 		GUI gui = new GUI();
 		Point[] adjust = gui.getRefLine(
 				getImg(dir, 0),
@@ -69,9 +71,15 @@ public class BobClick {
 				+ prettyPoint(adjust[0]) + " -- "
 				+ prettyPoint(adjust[1]));
 	
-		int numFrames = maxFrameNum(dir);
 		System.out.println("number of frames: " + numFrames);
 		Point[][] edgevecs = getEdgeVecs(dir, numFrames, gui);
+		System.out.println("edgevec 1: "
+				+ prettyPoint(edgevecs[0][0]) + " -- "
+				+prettyPoint(edgevecs[0][1]));
+		System.out.println("edgevec 2: "
+				+ prettyPoint(edgevecs[1][0]) + " -- "
+				+prettyPoint(edgevecs[1][1]));
+		PointCalc pc = new PointCalc(adjust, edgevecs);
 		List<Point> points = getBobClicks(dir, numFrames, gui);
 	}
 
@@ -135,6 +143,14 @@ public class BobClick {
 	}
 
 	public static String prettyPoint(int x, int y) {
+		return "(" + x + "," + y + ")";
+	}
+	
+	public static String prettyPoint(PointD p) {
+		return prettyPoint(p.x, p.y);
+	}
+
+	public static String prettyPoint(double x, double y) {
 		return "(" + x + "," + y + ")";
 	}
 	
