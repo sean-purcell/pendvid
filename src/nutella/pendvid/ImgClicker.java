@@ -33,42 +33,7 @@ public class ImgClicker extends JPanel {
 		this.addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("click at:\t" + prettyPoint(e.getX(), e.getY()));
-				int x = (int) (e.getX() / ratio);
-				int y = (int) (e.getY() / ratio);
-				System.out.println("rescaled to:\t" + prettyPoint(x, y));
-				switch(mode) {
-				case 0: break;
-				case 1: {
-					if(e.getButton() == MouseEvent.BUTTON1) {
-						if(click1 == null) {
-							click1 = new Point(x, y);
-							System.out.println("refline click1");
-						} else {
-							Point tmp = new Point(x, y);
-							if(!tmp.equals(click1)) {
-								click2 = tmp;
-								System.out.println("refline click2");
-								if(waitThread != null) {
-									waitThread.interrupt();
-								}
-							}
-						}
-					} else {
-						click1 = null;
-					}
-				} break;
-				case 2: {
-					if(e.getButton() == MouseEvent.BUTTON1) {
-						click1 = new Point(x, y);
-						System.out.println("bobclick");
-						if(waitThread != null) {
-							waitThread.interrupt();
-						}
-					}
-				} break;
-				}
-				ImgClicker.this.repaint();
+				mouseClick(e);
 			}
 
 			@Override
@@ -93,11 +58,56 @@ public class ImgClicker extends JPanel {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				this.mouseMoved(e);
+				System.out.println("mouse dragged: "
+						+ prettyPoint(mouse.x, mouse.y) + " -- "
+						+ prettyPoint(e.getX(), e.getY()));
+				mouseMoved(e);
 			}
 		});
 	}
 
+	private void mouseClick(MouseEvent e) {
+		System.out.println("click at:\t" + prettyPoint(e.getX(), e.getY()));
+		if(e.getX() >= img.getWidth(null) || e.getY() >= img.getHeight(null)) {
+			return;
+		}
+		int x = (int) (e.getX() / ratio);
+		int y = (int) (e.getY() / ratio);
+		System.out.println("rescaled to:\t" + prettyPoint(x, y));
+		switch(mode) {
+		case 0: break;
+		case 1: {
+			if(e.getButton() == MouseEvent.BUTTON1) {
+				if(click1 == null) {
+					click1 = new Point(x, y);
+					System.out.println("refline click1");
+				} else {
+					Point tmp = new Point(x, y);
+					if(!tmp.equals(click1)) {
+						click2 = tmp;
+						System.out.println("refline click2");
+						if(waitThread != null) {
+							waitThread.interrupt();
+						}
+					}
+				}
+			} else {
+				click1 = null;
+			}
+		} break;
+		case 2: {
+			if(e.getButton() == MouseEvent.BUTTON1) {
+				click1 = new Point(x, y);
+				System.out.println("bobclick");
+				if(waitThread != null) {
+					waitThread.interrupt();
+				}
+			}
+		} break;
+		}
+		ImgClicker.this.repaint();
+	}
+	
 	private int appRatio(int v) {
 		return (int) (v * ratio);
 	}

@@ -70,7 +70,7 @@ public class BobClick {
 		System.out.println("Reference vertical line: "
 				+ prettyPoint(adjust[0]) + " -- "
 				+ prettyPoint(adjust[1]));
-	
+
 		System.out.println("number of frames: " + numFrames);
 		Point[][] edgevecs = getEdgeVecs(dir, numFrames, gui);
 		System.out.println("edgevec 1: "
