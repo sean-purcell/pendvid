@@ -1,6 +1,9 @@
 package nutella.pendvid;
 
+import java.awt.Component;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +12,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 
 public class BobClick {
 	public static String frameFilename(String dir, int num) {
@@ -56,7 +60,9 @@ public class BobClick {
 		System.out.println(dir);
 
 		GUI gui = new GUI();
-		Point[] adjust = gui.getRefLine(getImg(dir, 0));
+		Point[] adjust = gui.getRefLine(
+				getImg(dir, 0),
+				genLabel("Click on two points along a reference vertical line"));
 		System.out.println("Reference vertical line: "
 				+ prettyPoint(adjust[0]) + " -- "
 				+ prettyPoint(adjust[1]));
@@ -83,5 +89,12 @@ public class BobClick {
 
 	public static String prettyPoint(int x, int y) {
 		return "(" + x + "," + y + ")";
+	}
+	
+	public static List<Component> genLabel(String contents) {
+		JLabel label = new JLabel(contents);
+		List<Component> list = new ArrayList<Component>();
+		list.add(label);
+		return list;
 	}
 }

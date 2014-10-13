@@ -145,7 +145,7 @@ public class ImgClicker extends JPanel {
 				(int) (newImg.getWidth() * ratio),
 				(int) (newImg.getHeight() * ratio),
 				0);
-		this.setSize(new Dimension(
+		this.setMinimumSize(new Dimension(
 				img.getWidth(null),
 				img.getHeight(null)));
 		this.repaint();
