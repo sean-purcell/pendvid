@@ -1,11 +1,10 @@
-package nutella;
+package nutella.pendvid;
 
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.imageio.ImageIO;
 
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
@@ -17,19 +16,8 @@ import com.xuggle.xuggler.IVideoPicture;
 import com.xuggle.xuggler.IVideoResampler;
 import com.xuggle.xuggler.Utils;
 
-public class Pendvid {
-	public static void main(String[] args) {
-		args = new String[]{System.getProperty("user.home") + "/Dropbox/20141010_155027.mp4"};
-		if(args.length == 0) {
-			throw new IllegalArgumentException
-				("must pass filename as first argument");
-		}
-
-		JFrame window = new JFrame("video");
-		VidFrame vidframe = new VidFrame();
-		
-		String filename = args[0];
-
+public class Readvid {
+	public static void readvid(String filename, String outdir) {
 		IContainer container = IContainer.make();
 
 		if(container.open(filename, IContainer.Type.READ, null) < 0) {
@@ -44,24 +32,24 @@ public class Pendvid {
 		IStreamCoder videoCoder = null;
 		for(int i = 0; i < numStreams; i++) {
 			IStream stream = container.getStream(i);
-			
+	
 			IStreamCoder coder = stream.getStreamCoder();
-			
+	
 			if(coder.getCodecType() == ICodec.Type.CODEC_TYPE_VIDEO) {
 				videoStreamId = i;
 				videoCoder = coder;
 				break;
 			}
 		}
-		
+
 		if(videoStreamId == -1) {
 			throw new RuntimeException("could not find video stream in container" + filename);
 		}
-		
+
 		if(videoCoder.open() < 0) {
 			throw new RuntimeException("could not open video decoder");
 		}
-		
+
 		IVideoResampler resampler = null;
 		if(videoCoder.getPixelType() != IPixelFormat.Type.BGR24) {
 			resampler = IVideoResampler.make(videoCoder.getWidth(), videoCoder.getHeight(), IPixelFormat.Type.BGR24, videoCoder.getWidth(), videoCoder.getHeight(), videoCoder.getPixelType());
@@ -69,12 +57,8 @@ public class Pendvid {
 				throw new RuntimeException("could not create colour space resampler");
 			}
 		}
-		
-		vidframe.setMinimumSize(new Dimension(videoCoder.getWidth(), videoCoder.getHeight()));
-		window.getContentPane().add(vidframe);
-		window.pack();
-		window.setVisible(true);
-		
+
+		int frameNo = 0;
 		IPacket packet = IPacket.make();
 		while(container.readNextPacket(packet) >= 0) {
 			if(packet.getStreamIndex() == videoStreamId) {
@@ -85,7 +69,7 @@ public class Pendvid {
 					if(bytesDecoded < 0)
 						throw new RuntimeException("got error decoding video");
 					offset += bytesDecoded;
-					
+			
 					if(picture.isComplete()) {
 						IVideoPicture newPic = picture;
 						if(resampler != null) {
@@ -98,13 +82,19 @@ public class Pendvid {
 						if(newPic.getPixelType() != IPixelFormat.Type.BGR24)
 							throw new RuntimeException("could not decode video as BGR 24 bit");
 						BufferedImage image = Utils.videoPictureToImage(newPic);
-						vidframe.setImg(image);
-						window.repaint();
+				
+						try {
+							ImageIO.write(image, "jpg", new File(outdir + File.separator + "f" + frameNo + ".jpg"));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						System.out.println(outdir + File.separator + "f" + frameNo + ".jpg");
+						frameNo++;
 					}
 				}
 			}
 		}
-		
+
 		if(videoCoder != null) {
 			videoCoder.close();
 		}
@@ -112,17 +102,13 @@ public class Pendvid {
 			container.close();
 		}
 	}
-}
 
-class VidFrame extends JPanel {
-	private BufferedImage img;
-	public void setImg(BufferedImage img) {
-		this.img = img;
-	}
-	
-	@Override
-	public void paintComponent(Graphics g) {
-		if(img != null)
-			g.drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
+	public static void main(String[] args) {
+		if(args.length < 2) {
+			throw new IllegalArgumentException
+				("must pass filename as first argument and out dir as second");
+		}
+
+		Readvid.readvid(args[0], args[1]);
 	}
 }
