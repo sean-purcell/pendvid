@@ -83,7 +83,7 @@ public class Util {
 		return loader;
 	}
 
-    public static List convert(boolean[][] a) {
+    public static List<Point> convert(boolean[][] a) {
         List list = new ArrayList<Point>();
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a[0].length; j++) {
