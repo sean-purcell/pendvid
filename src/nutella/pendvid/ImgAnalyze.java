@@ -24,7 +24,7 @@ public class ImgAnalyze {
         return avg(Util.convert(a));
     }
 
-    public static Point stdev(boolean[][] a) {
+    public static double stdev(boolean[][] a) {
         return stdev(Util.convert(a));
     }
 
@@ -39,15 +39,12 @@ public class ImgAnalyze {
         return new Point((int) Math.round(x), (int) Math.round(y));
     }
 
-    public static Point stdev(List<Point> points) {
+    public static double stdev(List<Point> points) {
         Point avg = avg(points);
-        double x = 0, y = 0;
+        double d = 0;
         for (Point p : points) {
-            x += (p.x - avg.x) * (p.x - avg.x);
-            y += (p.y - avg.y) * (p.y - avg.y);
+            d += (p.x - avg.x) * (p.x - avg.x) + (p.y - avg.y) * (p.y - avg.y);
         }
-        x /= points.size();
-        y /= points.size();
-        return new Point((int) Math.round(Math.sqrt(x)), (int) Math.round(Math.sqrt(y)));
+        return Math.sqrt(d / points.size());
     }
 }
