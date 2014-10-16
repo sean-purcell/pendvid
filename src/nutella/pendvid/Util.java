@@ -82,7 +82,7 @@ public class Util {
 	}
 
     public static List<Point> convert(boolean[][] a) {
-        List list = new ArrayList<Point>();
+        List<Point> list = new ArrayList<Point>();
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a[0].length; j++) {
                 if (a[i][j]) {
