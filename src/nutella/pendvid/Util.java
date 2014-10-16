@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.imageio.ImageIO;
@@ -81,4 +83,15 @@ public class Util {
 		return loader;
 	}
 
+    public static List convert(boolean[][] a) {
+        List list = new ArrayList<Point>();
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a[0].length; j++) {
+                if (a[i][j]) {
+                    list.add(new Point(i, j));
+                }
+            }
+        }
+        return list;
+    }
 }
