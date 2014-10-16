@@ -1,11 +1,16 @@
 package nutella.pendvid;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
+import nutella.pendvid.imgdiff.DiffData;
+
 public class ImgAnalyze {
-    public static boolean[][] diff(BufferedImage a, BufferedImage b, int thresh) {
+	public static final int THRESHOLD = 30;
+
+    public static boolean[][] pxDiff(BufferedImage a, BufferedImage b) {
         boolean[][] d = new boolean[a.getWidth()][a.getHeight()];
         for (int i = 0; i < a.getWidth(); i++) {
             for (int j = 0; j < a.getHeight(); j++) {
@@ -14,7 +19,7 @@ public class ImgAnalyze {
                 d[i][j] = (o.getRed() - n.getRed()) * (o.getRed() - n.getRed()) +
                         (o.getBlue() - n.getBlue()) * (o.getBlue() - n.getBlue()) +
                       (o.getGreen() - n.getGreen()) * (o.getGreen() - n.getGreen()) >
-                	thresh * thresh;
+                	THRESHOLD * THRESHOLD;
             }
         }
         return d;
@@ -46,5 +51,10 @@ public class ImgAnalyze {
             d += (p.x - avg.x) * (p.x - avg.x) + (p.y - avg.y) * (p.y - avg.y);
         }
         return Math.sqrt(d / points.size());
+    }
+    
+    public static DiffData analyzeImgDiff(BufferedImage a, BufferedImage b) {
+    	boolean[][] diff = pxDiff(a, b);
+    	return new DiffData(diff, avg(diff), stdev(diff));
     }
 }

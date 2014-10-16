@@ -23,12 +23,14 @@ public class ImgDiff extends JFrame {
 		int maxFrames = Util.maxFrameNum(dir);
 		Point[] bounds = gui.getBoundBox(Util.loadImgsAsync(dir, maxFrames));
 		AsyncLoader asyncLoader = Util.loadImgsAsync(dir, maxFrames);
-		BufferedImage prev = asyncLoader.next();
+		BufferedImage prev = Util.crop(asyncLoader.next(), bounds);
 		gui.mode = 1;
 		for(int i = 1; i < maxFrames; i++) {
-			BufferedImage cur = asyncLoader.next();
-			gui.display(cur, ImgAnalyze.diff(prev, cur, 30));
+			BufferedImage cur = Util.crop(asyncLoader.next(), bounds);
+			DiffData diff = ImgAnalyze.analyzeImgDiff(prev, cur);
+			gui.display(cur, diff);
 			prev = cur;
+			prevDiff = diff;
 		}
 		asyncLoader.done();
 		gui.mode = 0;

@@ -7,13 +7,14 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class DiffDisp extends JPanel {
 	private BufferedImage img;
-	private boolean[][] diff;
+	private DiffData diff;
 	private double ratio;
 	private ImgDiffGUI gui;
 	
-	protected void update(BufferedImage img, boolean[][] diff, ImgDiffGUI gui) {
+	protected void update(BufferedImage img, DiffData diff, ImgDiffGUI gui) {
 		this.img = img;
 		this.diff = diff;
 		this.gui = gui;
@@ -50,14 +51,20 @@ public class DiffDisp extends JPanel {
 		System.out.println("mode: " + gui.mode);
 		switch(gui.mode) {
 		case 1:
+			scratch.drawImage(img, 0, 0, null);
 			scratch.setColor(new Color(0, 0, 0, 196));
-			for(int x = 0; x < diff.length; x++) {
-				for(int y = 0; y < diff[x].length; y++) {
-					if(diff[x][y]) {
+			for(int x = 0; x < diff.diff.length; x++) {
+				for(int y = 0; y < diff.diff[x].length; y++) {
+					if(diff.diff[x][y]) {
 						scratch.fillRect(x, y, 1, 1);
 					}
 				}
 			}
+			scratch.setColor(Color.RED);
+			final int DOT_SIZE = 3;
+			scratch.fillOval(diff.avg.x - DOT_SIZE, diff.avg.y - DOT_SIZE, DOT_SIZE * 2, DOT_SIZE * 2);
+			scratch.drawOval((int) (diff.avg.x - diff.stdev), (int) (diff.avg.y - diff.stdev),
+					(int) (2 * diff.stdev), (int) (2 * diff.stdev));
 			break;
 		case 2:
 			scratch.drawImage(img, 0, 0, null);

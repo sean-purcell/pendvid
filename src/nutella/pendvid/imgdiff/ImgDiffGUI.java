@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import nutella.pendvid.AsyncLoader;
 import nutella.pendvid.Util;
 
+@SuppressWarnings("serial")
 public class ImgDiffGUI extends JFrame {
 	private final JPanel root;
 	protected final DiffDisp diffDisp;
@@ -153,7 +154,7 @@ public class ImgDiffGUI extends JFrame {
 		this.repaint();
 	}
 	
-	public void display(BufferedImage img, boolean[][] diff) {
+	public void display(BufferedImage img, DiffData diff) {
 		diffDisp.update(img, diff, this);
 		this.redraw();
 		waitThread = Thread.currentThread();

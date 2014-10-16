@@ -92,4 +92,10 @@ public class Util {
 		}
 		return list;
 	}
+	
+	public static BufferedImage crop(BufferedImage img, Point[] bounds) {
+		int dx = bounds[1].x - bounds[0].x;
+		int dy = bounds[1].y - bounds[0].y;
+		return img.getSubimage(bounds[0].x, bounds[0].y, dx, dy);
+	}
 }
