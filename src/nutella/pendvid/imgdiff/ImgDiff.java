@@ -30,7 +30,6 @@ public class ImgDiff extends JFrame {
 			DiffData diff = ImgAnalyze.analyzeImgDiff(prev, cur);
 			gui.display(cur, diff);
 			prev = cur;
-			prevDiff = diff;
 		}
 		asyncLoader.done();
 		gui.mode = 0;
