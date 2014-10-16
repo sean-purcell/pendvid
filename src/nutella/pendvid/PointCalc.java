@@ -5,8 +5,6 @@ import java.awt.Point;
 import nutella.pendvid.bobclick.ClickData;
 
 public class PointCalc {
-	private PointD[] edgeVecs;
-	
 	private PointD intersection;
 	private PointD refVec;
 	

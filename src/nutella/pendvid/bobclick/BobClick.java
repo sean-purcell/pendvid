@@ -48,7 +48,7 @@ public class BobClick {
 				+ Util.prettyPoint(edgevecs[1][0]) + " -- "
 				+Util.prettyPoint(edgevecs[1][1]));
 		PointCalc pc = new PointCalc(adjust, edgevecs);
-		List<Point> points = getBobClicks(dir, numFrames, bobClickGUI, pc, out);
+		getBobClicks(dir, numFrames, bobClickGUI, pc, out);
 		
 		out.close();
 	}

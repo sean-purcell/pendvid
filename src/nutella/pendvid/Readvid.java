@@ -17,6 +17,7 @@ import com.xuggle.xuggler.IVideoResampler;
 import com.xuggle.xuggler.Utils;
 
 public class Readvid {
+	@SuppressWarnings("deprecation")
 	public static void readvid(String filename, String outdir) {
 		IContainer container = IContainer.make();
 
