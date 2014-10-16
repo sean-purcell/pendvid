@@ -53,8 +53,26 @@ public class ImgAnalyze {
         return Math.sqrt(d / points.size());
     }
     
-    public static DiffData analyzeImgDiff(BufferedImage a, BufferedImage b) {
+    public static DiffData analyzeImgDiff(BufferedImage a, BufferedImage b, DiffData prevDiff) {
     	boolean[][] diff = pxDiff(a, b);
-    	return new DiffData(diff, avg(diff), stdev(diff));
+        List<Point> points = Util.convert(diff);
+        Point avg = avg(points);
+        for (int i = 0; i < points.size(); i++) {
+            if ((points.get(i).x - avg.x) * (points.get(i).x - avg.x) +
+                (points.get(i).y - avg.y) * (points.get(i).y - avg.y) >  prevDiff.stdev * 3) {
+                points.remove(i);
+                i--;
+            }
+        }
+        double stdev = stdev(points);
+        avg = avg(points);
+        for (int i = 0; i < points.size(); i++) {
+            if ((points.get(i).x - avg.x) * (points.get(i).x - avg.x) +
+                (points.get(i).y - avg.y) * (points.get(i).y - avg.y) >  stdev * 2) {
+                points.remove(i);
+                i--;
+            }
+        }
+        return new DiffData(points, avg(points), stdev(points));
     }
 }
