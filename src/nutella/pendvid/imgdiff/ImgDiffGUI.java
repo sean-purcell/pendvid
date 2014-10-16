@@ -3,6 +3,8 @@ package nutella.pendvid.imgdiff;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -37,7 +39,6 @@ public class ImgDiffGUI extends JFrame {
 		});
 		
 		diffDisp.addMouseListener(new MouseListener() {
-
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(waitThread != null) {
@@ -65,6 +66,29 @@ public class ImgDiffGUI extends JFrame {
 
 			@Override
 			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		
+		this.addKeyListener(new KeyListener() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				System.out.println("key pressed");
+				if(waitThread != null) {
+					waitThread.interrupt();
+				}
+			}
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
 				
 			}
