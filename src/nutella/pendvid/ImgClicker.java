@@ -12,8 +12,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import static nutella.pendvid.BobClick.prettyPoint;
-
 @SuppressWarnings("serial")
 public class ImgClicker extends JPanel {
 	private Image img;
@@ -59,21 +57,21 @@ public class ImgClicker extends JPanel {
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				System.out.println("mouse dragged: "
-						+ prettyPoint(mouse.x, mouse.y) + " -- "
-						+ prettyPoint(e.getX(), e.getY()));
+						+ Util.prettyPoint(mouse.x, mouse.y) + " -- "
+						+ Util.prettyPoint(e.getX(), e.getY()));
 				mouseMoved(e);
 			}
 		});
 	}
 
 	private void mouseClick(MouseEvent e) {
-		System.out.println("click at:\t" + prettyPoint(e.getX(), e.getY()));
+		System.out.println("click at:\t" + Util.prettyPoint(e.getX(), e.getY()));
 		if(e.getX() >= img.getWidth(null) || e.getY() >= img.getHeight(null)) {
 			return;
 		}
 		int x = (int) (e.getX() / ratio);
 		int y = (int) (e.getY() / ratio);
-		System.out.println("rescaled to:\t" + prettyPoint(x, y));
+		System.out.println("rescaled to:\t" + Util.prettyPoint(x, y));
 		switch(mode) {
 		case 0: break;
 		case 1: {

@@ -30,7 +30,7 @@ public class AsyncLoader extends Thread {
 				System.out.println("loader interrupted");
 			}
 			while(imgq.size() < 10 && i < numFrames) {
-				imgq.add(BobClick.getImg(dir, i));
+				imgq.add(Util.getImg(dir, i));
 				System.out.println("loaded frame " + i);
 				i++;
 			}
