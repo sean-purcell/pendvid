@@ -2,6 +2,8 @@ package nutella.pendvid;
 
 import java.awt.Point;
 
+import nutella.pendvid.bobclick.ClickData;
+
 public class PointCalc {
 	private PointD[] edgeVecs;
 	

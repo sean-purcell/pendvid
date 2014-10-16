@@ -1,4 +1,4 @@
-package nutella.pendvid;
+package nutella.pendvid.bobclick;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -12,6 +12,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+
+import nutella.pendvid.AsyncLoader;
+import nutella.pendvid.PointCalc;
+import nutella.pendvid.Util;
 
 public class BobClick {
 	public static void main(String[] args) {

@@ -1,4 +1,6 @@
-package nutella.pendvid;
+package nutella.pendvid.bobclick;
+
+import nutella.pendvid.PointD;
 
 public class ClickData {
 	public final double theta;

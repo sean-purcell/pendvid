@@ -1,4 +1,4 @@
-package nutella.pendvid;
+package nutella.pendvid.bobclick;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,6 +11,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
+
+import nutella.pendvid.Util;
 
 @SuppressWarnings("serial")
 public class ImgClicker extends JPanel {
