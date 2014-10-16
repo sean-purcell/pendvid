@@ -10,10 +10,10 @@ public class AsyncLoader extends Thread {
 	
 	private volatile boolean stop;
 	
-	public AsyncLoader(int numFrames, ConcurrentLinkedQueue<BufferedImage> imgq, String dir) {
+	public AsyncLoader(int numFrames, String dir) {
 		this.numFrames = numFrames;
-		this.imgq = imgq;
 		this.dir = dir;
+		this.imgq = new ConcurrentLinkedQueue<BufferedImage>();
 		this.stop = false;
 	}
 	
@@ -35,6 +35,20 @@ public class AsyncLoader extends Thread {
 				i++;
 			}
 		}
+	}
+	
+	public BufferedImage next() {
+		/* wait until its not empty */
+		while(imgq.size() == 0) {
+			try {
+				Thread.sleep(10);
+			} catch(InterruptedException e) {
+				
+			}
+		}
+		BufferedImage bi = imgq.remove();
+		this.interrupt();
+		return bi;
 	}
 	
 	public void done() {

@@ -1,7 +1,7 @@
 package nutella.pendvid.imgdiff;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.JFrame;
 
@@ -21,28 +21,14 @@ public class ImgDiff extends JFrame {
 
 		ImgDiffGUI gui = new ImgDiffGUI();
 		int maxFrames = Util.maxFrameNum(dir);
-		ConcurrentLinkedQueue<BufferedImage> imgq =
-				new ConcurrentLinkedQueue<BufferedImage>();
-		AsyncLoader asyncLoader = Util.loadImgsAsync(imgq, dir, maxFrames);
-		while(imgq.size() == 0) {
-			try{
-				Thread.sleep(50);
-			} catch(InterruptedException e) {
-			}
-		}
-		BufferedImage prev = imgq.remove();
-		asyncLoader.interrupt();
+		Point[] bounds = gui.getBoundBox(Util.loadImgsAsync(dir, maxFrames));
+		AsyncLoader asyncLoader = Util.loadImgsAsync(dir, maxFrames);
+		BufferedImage prev = asyncLoader.next();
 		for(int i = 1; i < maxFrames; i++) {
-			while(imgq.size() == 0) {
-				try{
-					Thread.sleep(50);
-				} catch(InterruptedException e) {
-				}
-			}
-			BufferedImage cur = imgq.remove();
-			asyncLoader.interrupt();
+			BufferedImage cur = asyncLoader.next();
 			gui.display(cur, ImgAnalyze.diff(prev, cur, 30));
 			prev = cur;
 		}
+		asyncLoader.done();
 	}
 }

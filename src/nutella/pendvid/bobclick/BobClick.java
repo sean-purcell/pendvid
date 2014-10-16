@@ -4,11 +4,9 @@ import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -59,8 +57,7 @@ public class BobClick {
 		List<Component> instr = genLabel(
 			"Define the line for the pendulum swing at the two edges.  Press next to advance to the next image.");
 		JButton button = new JButton("next");
-		final ConcurrentLinkedQueue<BufferedImage> imgq = new ConcurrentLinkedQueue<BufferedImage>();
-		final AsyncLoader asyncLoader = Util.loadImgsAsync(imgq, dir, numFrames);
+		final AsyncLoader asyncLoader = Util.loadImgsAsync(dir, numFrames);
 		button.addActionListener(new ActionListener() {
 			private int i = 0;
 
@@ -69,8 +66,7 @@ public class BobClick {
 				if(i + 1 >= numFrames)
 					return;
 				i++;
-				bobClickGUI.setImg(imgq.remove());
-				asyncLoader.interrupt();
+				bobClickGUI.setImg(asyncLoader.next());
 			}
 		});
 		instr.add(button);
@@ -81,18 +77,10 @@ public class BobClick {
 	
 	public static List<Point> getBobClicks(String dir, int numFrames, BobClickGUI bobClickGUI, PointCalc pc, PrintStream out) {
 		List<Point> bobcentres = new ArrayList<Point>(numFrames);
-		final ConcurrentLinkedQueue<BufferedImage> imgq = new ConcurrentLinkedQueue<BufferedImage>();
-		final AsyncLoader asyncLoader = Util.loadImgsAsync(imgq, dir, numFrames);
+		final AsyncLoader asyncLoader = Util.loadImgsAsync(dir, numFrames);
 		asyncLoader.interrupt();
 		for(int i = 0; i < numFrames; i++) {
-			while(imgq.size() == 0) {
-				try{
-					Thread.sleep(50);
-				} catch(InterruptedException e) {
-				}
-			}
-			Point p = bobClickGUI.getBobClick(imgq.remove(), genLabel("Click on bob centre"));
-			asyncLoader.interrupt();
+			Point p = bobClickGUI.getBobClick(asyncLoader.next(), genLabel("Click on bob centre"));
 			System.out.println("bob at:\t" + Util.prettyPoint(p));
 			bobcentres.add(p);
 			ClickData click = pc.compClick(p);

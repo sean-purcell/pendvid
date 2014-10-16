@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -75,10 +74,9 @@ public class Util {
 	}
 
 	public static AsyncLoader loadImgsAsync(
-			final ConcurrentLinkedQueue<BufferedImage> imgq,
 			final String dir,
 			final int numFrames) {
-		AsyncLoader loader = new AsyncLoader(numFrames, imgq, dir);
+		AsyncLoader loader = new AsyncLoader(numFrames, dir);
 		loader.start();
 		return loader;
 	}
