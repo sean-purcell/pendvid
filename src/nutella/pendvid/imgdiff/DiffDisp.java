@@ -53,12 +53,8 @@ public class DiffDisp extends JPanel {
 		case 1:
 			scratch.drawImage(img, 0, 0, null);
 			scratch.setColor(new Color(0, 0, 0, 196));
-			for(int x = 0; x < diff.diff.length; x++) {
-				for(int y = 0; y < diff.diff[x].length; y++) {
-					if(diff.diff[x][y]) {
-						scratch.fillRect(x, y, 1, 1);
-					}
-				}
+			for(Point p : diff.points) {
+				scratch.fillRect(p.x, p.y, 1, 1);
 			}
 			scratch.setColor(Color.RED);
 			final int DOT_SIZE = 3;
