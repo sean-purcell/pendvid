@@ -81,15 +81,15 @@ public class Util {
 		return loader;
 	}
 
-    public static List<Point> convert(boolean[][] a) {
-        List<Point> list = new ArrayList<Point>();
-        for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j < a[0].length; j++) {
-                if (a[i][j]) {
-                    list.add(new Point(i, j));
-                }
-            }
-        }
-        return list;
-    }
+	public static List<Point> convert(boolean[][] a) {
+		List<Point> list = new ArrayList<Point>();
+		for (int i = 0; i < a.length; i++) {
+			for (int j = 0; j < a[0].length; j++) {
+				if (a[i][j]) {
+					list.add(new Point(i, j));
+				}
+			}
+		}
+		return list;
+	}
 }
