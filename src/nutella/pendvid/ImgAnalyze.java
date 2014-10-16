@@ -54,7 +54,7 @@ public class ImgAnalyze {
     }
     
     public static DiffData analyzeImgDiff(BufferedImage a, BufferedImage b) {
-    	boolean[][] diff = pxDiff(a, b);
+    	List<Point> diff = Util.convert(pxDiff(a, b));
     	return new DiffData(diff, avg(diff), stdev(diff));
     }
 }
