@@ -59,18 +59,20 @@ public class ImgAnalyze {
         if(prevDiff == null) {
         	return new DiffData(points, avg(points), stdev(points));
         }
+        final int RADIUS = 20;
+        final int BOUND = 300;
         for (int i = 0; i < points.size(); i++) {
             Point p = points.get(i);
             int c = 0;
-            for (int x = Math.max(p.x, 0); x < Math.min(p.x + 20, diff.length); x++) {
-                for (int y = Math.max(p.y - (int) Math.sqrt(400 - (p.x - x) * (p.x - x)), 0);
-                     y < Math.min(p.y + (int) Math.sqrt(400 - (p.x - x) * (p.x - x)), diff[0].length); y++) {
+            for (int x = Math.max(p.x - RADIUS, 0); x < Math.min(p.x + RADIUS, diff.length); x++) {
+                for (int y = Math.max(p.y - (int) Math.sqrt(RADIUS * RADIUS - (p.x - x) * (p.x - x)), 0);
+                     y < Math.min(p.y + (int) Math.sqrt(RADIUS * RADIUS - (p.x - x) * (p.x - x)), diff[0].length); y++) {
                     if (diff[x][y]) {
                         c++;
                     }
                 }
             }
-            if (c < 200) {
+            if (c < BOUND) {
                 points.remove(i);
                 i--;
                 diff[p.x][p.y] = false;
