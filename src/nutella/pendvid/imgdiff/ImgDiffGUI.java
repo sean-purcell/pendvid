@@ -158,13 +158,14 @@ public class ImgDiffGUI extends JFrame {
 		diffDisp.update(img, diff, this);
 		this.redraw();
 		waitThread = Thread.currentThread();
-		while(!Thread.interrupted()) {
-			try {
-				Thread.sleep(1000);
-			} catch(InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-		}		
+//		while(!Thread.interrupted()) {
+//			try {
+//				Thread.sleep(1000);
+//			} catch(InterruptedException e) {
+//				Thread.currentThread().interrupt();
+//			}
+//		}
+		waitThread = null;
 		return;
 	}
 	

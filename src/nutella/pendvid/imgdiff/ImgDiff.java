@@ -2,7 +2,9 @@ package nutella.pendvid.imgdiff;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.PrintStream;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 import nutella.pendvid.AsyncLoader;
@@ -12,13 +14,24 @@ import nutella.pendvid.Util;
 @SuppressWarnings("serial")
 public class ImgDiff extends JFrame {
 	public static void main(String[] args) {
-		String dir = null;
-		if(args.length == 0) {
-			dir = Util.getFilename();
-		} else {
+		String dir = null, out = null;
+		
+		switch(args.length) {
+		case 0:
+			dir = Util.getOpenFilename(JFileChooser.DIRECTORIES_ONLY);
+			out = Util.getWriteFilename(JFileChooser.FILES_ONLY);
+			break;
+		case 1:
 			dir = args[0];
+			out = Util.getWriteFilename(JFileChooser.FILES_ONLY);
+			break;
+		default:
+			dir = args[0];
+			out = args[1];
+			break;
 		}
-
+		
+		PrintStream fout = Util.getPrintStream(out);
 		ImgDiffGUI gui = new ImgDiffGUI();
 		int maxFrames = Util.maxFrameNum(dir);
 		Point[] bounds = gui.getBoundBox(Util.loadImgsAsync(dir, maxFrames));
@@ -30,8 +43,14 @@ public class ImgDiff extends JFrame {
 			DiffData diff = ImgAnalyze.analyzeImgDiff(prev, cur);
 			gui.display(cur, diff);
 			prev = cur;
+
+			fout.println(i + ","
+					+ diff.avg.x + ","
+					+ diff.avg.y + ",");
 		}
 		asyncLoader.done();
 		gui.mode = 0;
+		fout.close();
+		gui.dispose();
 	}
 }

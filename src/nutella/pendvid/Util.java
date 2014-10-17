@@ -18,10 +18,20 @@ public class Util {
 		return dir + File.separator + "f" + num + ".jpg";
 	}
 
-	public static String getFilename() {
+	public static String getOpenFilename(int mode) {
 		JFileChooser jfc = new JFileChooser();
-		jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		jfc.setFileSelectionMode(mode);
 		int res = jfc.showOpenDialog(null);
+		if(res == JFileChooser.CANCEL_OPTION) {
+			throw new RuntimeException("must choose file");
+		}
+		return jfc.getSelectedFile().getAbsolutePath();
+	}
+
+	public static String getWriteFilename(int mode) {
+		JFileChooser jfc = new JFileChooser();
+		jfc.setFileSelectionMode(mode);
+		int res = jfc.showSaveDialog(null);
 		if(res == JFileChooser.CANCEL_OPTION) {
 			throw new RuntimeException("must choose file");
 		}
