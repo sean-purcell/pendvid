@@ -58,7 +58,7 @@ public class DiffDisp extends JPanel {
 			}
 			scratch.setColor(Color.RED);
 			final int DOT_SIZE = 3;
-			scratch.fillOval(diff.avg.x - DOT_SIZE, diff.avg.y - DOT_SIZE, DOT_SIZE * 2, DOT_SIZE * 2);
+			scratch.fillOval((int) diff.avg.x - DOT_SIZE, (int) diff.avg.y - DOT_SIZE, DOT_SIZE * 2, DOT_SIZE * 2);
 			scratch.drawOval((int) (diff.avg.x - diff.stdev), (int) (diff.avg.y - diff.stdev),
 					(int) (2 * diff.stdev), (int) (2 * diff.stdev));
 			break;

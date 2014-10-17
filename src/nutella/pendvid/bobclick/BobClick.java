@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 
 import nutella.pendvid.AsyncLoader;
@@ -19,7 +20,7 @@ public class BobClick {
 	public static void main(String[] args) {
 		String dir = null;
 		if(args.length == 0) {
-			dir = Util.getFilename();
+			dir = Util.getOpenFilename(JFileChooser.DIRECTORIES_ONLY);
 		} else {
 			dir = args[0];
 		}
