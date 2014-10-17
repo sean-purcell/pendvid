@@ -8,7 +8,7 @@ import java.util.List;
 import nutella.pendvid.imgdiff.DiffData;
 
 public class ImgAnalyze {
-	public static final int THRESHOLD = 30;
+	public static int THRESHOLD = 30;
 
     public static boolean[][] pxDiff(BufferedImage a, BufferedImage b) {
         boolean[][] d = new boolean[a.getWidth()][a.getHeight()];

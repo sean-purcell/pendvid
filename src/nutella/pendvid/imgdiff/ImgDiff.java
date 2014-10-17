@@ -25,6 +25,11 @@ public class ImgDiff extends JFrame {
 			dir = args[0];
 			out = Util.getWriteFilename(JFileChooser.FILES_ONLY);
 			break;
+		case 2:
+			dir = args[0];
+			out = args[1];
+			ImgAnalyze.THRESHOLD = Integer.parseInt(args[2]);
+			break;
 		default:
 			dir = args[0];
 			out = args[1];
