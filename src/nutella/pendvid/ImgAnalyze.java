@@ -66,15 +66,15 @@ public class ImgAnalyze {
 //                i--;
 //            }
 //        }
-//        double stdev = stdev(points);
-//        avg = avg(points);
-//        for (int i = 0; i < points.size(); i++) {
-//            if ((points.get(i).x - avg.x) * (points.get(i).x - avg.x) +
-//                (points.get(i).y - avg.y) * (points.get(i).y - avg.y) > stdev * 3) {
-//                points.remove(i);
-//                i--;
-//            }
-//        }
+        PointD avg = avg(points);
+        double stdev = stdev(points);
+        for (int i = 0; i < points.size(); i++) {
+            if ((points.get(i).x - avg.x) * (points.get(i).x - avg.x) +
+                (points.get(i).y - avg.y) * (points.get(i).y - avg.y) > 4 * stdev * stdev) {
+                points.remove(i);
+                i--;
+            }
+        }
         return new DiffData(points, avg(points), stdev(points));
     }
 }
