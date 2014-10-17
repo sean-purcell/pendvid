@@ -62,7 +62,7 @@ public class ImgAnalyze {
         for (int i = 0; i < points.size(); i++) {
             Point p = points.get(i);
             int c = 0;
-            for (int x = Math.max(p.x, 0); x < Math.min(p.x + 20, diff.length); x++) {
+            for (int x = Math.max(p.x - 20, 0); x < Math.min(p.x + 20, diff.length); x++) {
                 for (int y = Math.max(p.y - (int) Math.sqrt(400 - (p.x - x) * (p.x - x)), 0);
                      y < Math.min(p.y + (int) Math.sqrt(400 - (p.x - x) * (p.x - x)), diff[0].length); y++) {
                     if (diff[x][y]) {
