@@ -59,13 +59,23 @@ public class ImgAnalyze {
         if(prevDiff == null) {
         	return new DiffData(points, avg(points), stdev(points));
         }
-//        for (int i = 0; i < points.size(); i++) {
-//            if ((points.get(i).x - prevDiff.avg.x) * (points.get(i).x - prevDiff.avg.x) +
-//                (points.get(i).y - prevDiff.avg.y) * (points.get(i).y - prevDiff.avg.y) > prevDiff.stdev * prevDiff.stdev * 3) {
-//                points.remove(i);
-//                i--;
-//            }
-//        }
+        for (int i = 0; i < points.size(); i++) {
+            Point p = points.get(i);
+            int c = 0;
+            for (int x = Math.max(p.x, 0); x < Math.min(p.x + 20, diff.length); x++) {
+                for (int y = Math.max(p.y - (int) Math.sqrt(400 - (p.x - x) * (p.x - x)), 0);
+                     y < Math.min(p.y + (int) Math.sqrt(400 - (p.x - x) * (p.x - x)), diff[0].length); y++) {
+                    if (diff[x][y]) {
+                        c++;
+                    }
+                }
+            }
+            if (c < 200) {
+                points.remove(i);
+                i--;
+                diff[p.x][p.y] = false;
+            }
+        }
         PointD avg = avg(points);
         double stdev = stdev(points);
         for (int i = 0; i < points.size(); i++) {
