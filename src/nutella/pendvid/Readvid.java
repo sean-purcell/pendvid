@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFileChooser;
 
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IContainer;
@@ -17,6 +18,7 @@ import com.xuggle.xuggler.IVideoResampler;
 import com.xuggle.xuggler.Utils;
 
 public class Readvid {
+	@SuppressWarnings("deprecation")
 	public static void readvid(String filename, String outdir) {
 		IContainer container = IContainer.make();
 
@@ -104,11 +106,26 @@ public class Readvid {
 	}
 
 	public static void main(String[] args) {
-		if(args.length < 2) {
-			throw new IllegalArgumentException
-				("must pass filename as first argument and out dir as second");
+		String filename;
+		String outdir;
+		switch(args.length) {
+		case 0:
+			filename = Util.getOpenFilename(JFileChooser.FILES_ONLY);
+			outdir = Util.getWriteFilename(JFileChooser.DIRECTORIES_ONLY);
+			break;
+		case 1:
+			filename = args[0];
+			outdir = Util.getWriteFilename(JFileChooser.DIRECTORIES_ONLY);
+			break;
+		default:
+			filename = args[0];
+			outdir = args[1];
+			break;
 		}
+		
+		System.out.println(filename);
+		System.out.println(outdir);
 
-		Readvid.readvid(args[0], args[1]);
+		Readvid.readvid(filename, outdir);
 	}
 }

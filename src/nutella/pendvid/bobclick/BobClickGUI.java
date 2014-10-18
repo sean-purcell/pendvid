@@ -1,4 +1,4 @@
-package nutella.pendvid;
+package nutella.pendvid.bobclick;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -13,12 +13,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class GUI extends JFrame{
+public class BobClickGUI extends JFrame{
 	private final JPanel root;
 	private BufferedImage img;
 	private ImgClicker imgclick;
 
-	public GUI() {
+	public BobClickGUI() {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.root = new JPanel();
 		imgclick = new ImgClicker();
@@ -33,7 +33,7 @@ public class GUI extends JFrame{
 			@Override
 			public void componentResized(ComponentEvent e) {
 				System.out.println("Resized");
-				GUI.this.redraw();
+				BobClickGUI.this.redraw();
 			}
 		});
 	}
