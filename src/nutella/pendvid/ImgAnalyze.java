@@ -25,14 +25,6 @@ public class ImgAnalyze {
         return d;
     }
 
-    public static PointD avg(boolean[][] a) {
-        return avg(Util.convert(a));
-    }
-
-    public static double stdev(boolean[][] a) {
-        return stdev(Util.convert(a));
-    }
-
     public static PointD avg(List<Point> points) {
         double x = 0, y = 0;
         for (Point p : points) {
